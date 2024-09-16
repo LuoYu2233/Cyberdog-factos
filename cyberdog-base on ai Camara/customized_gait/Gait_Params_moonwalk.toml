@@ -1,0 +1,31 @@
+# Gait Params for moonwalk
+
+# 1
+[[step]]
+type            = "usergait"
+body_vel_des    = [0.0, 0.0, 0.0]
+body_pos_des    = [0.0, 0.2, 0.0, 0.3, 0.0, 0.17]
+landing_pos_des = [0.3, 0.00, 0.17,  0.00, -0.00, 0.17,  0.00, 0.00, 0.17,  0.3, 0.00, 0.17]
+step_height     = [0.15, 0.11, 0.11, 0.15]
+weight          = [10.0, 10.0, 10.0, 50.0, 50.0, 10.0]
+use_mpc_traj    = 0
+mu              = 0.40
+landing_gain    = 1.0 
+gait_id         = 110
+duration        = 150
+
+[[step]]
+type            = "usergait"
+body_vel_des    = [0.0, 0.0, 0.0]
+body_pos_des    = [0.0, 0.2, 0.0, 0.0, 0.0, 0.17]
+landing_pos_des = [0.65, 0.00, 0.17,  0.65, -0.00, 0.17,  0.65, 0.00, 0.17,  0.65, 0.00, 0.17]
+step_height     = [0.15, 0.11, 0.11, 0.15]
+weight          = [10.0, 10.0, 10.0, 50.0, 50.0, 10.0]
+use_mpc_traj    = 0
+mu              = 0.40
+landing_gain    = 1.0 
+gait_id         = 110
+duration        = 150
+
+
+# End of moonwalk #

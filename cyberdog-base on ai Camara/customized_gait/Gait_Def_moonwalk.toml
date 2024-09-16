@@ -1,0 +1,19 @@
+# Gait Def for moonwalk
+
+# 1
+[[section]]
+contact  = [1, 1, 1, 1]
+duration = 5
+
+[[section]]
+contact  = [1, 0, 0, 1]
+duration = 5
+
+
+[[section]]
+contact  = [0, 1, 1, 0]
+duration = 5
+
+[[section]]
+contact  = [1, 1, 1, 1]
+duration = 5
