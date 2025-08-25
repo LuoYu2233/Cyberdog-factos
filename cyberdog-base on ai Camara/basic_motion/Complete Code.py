@@ -30,61 +30,99 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge  
 import cv2  
 
-def change_direction(direction, msg, Ctrl):  
-    if direction == 'left':  
-        msg.gait_id = 0  
-    elif direction == 'right':  
-        msg.gait_id = 3  
-    msg.mode = 16  
-    msg.life_count += 1  
-    Ctrl.Send_cmd(msg)  
-    Ctrl.Wait_finish(16, msg.gait_id)  
+def change_direction(direction, msg, Ctrl):
+    """
+    控制机器人左右转向。
+
+    参数:
+        direction (str): 'left' 表示左转，'right' 表示右转
+        msg: 运动控制命令对象
+        Ctrl: 控制器对象，负责发送命令和等待执行完成
+    """
+    if direction == 'left':
+        msg.gait_id = 0  # 左转步态ID
+    elif direction == 'right':
+        msg.gait_id = 3  # 右转步态ID
+    msg.mode = 16  # 设置模式为16（转向模式）
+    msg.life_count += 1  # 更新life_count以确保命令生效
+    Ctrl.Send_cmd(msg)  # 发送控制命令
+    Ctrl.Wait_finish(16, msg.gait_id)  # 等待转向动作完成
+
 
 def move_change(direction, msg, Ctrl, duration, speed, step_height=0.03):  
+    """
+    控制机器人按指定方向移动，并可设置步高。
+
+    参数:
+        direction (str): 运动方向，可选 'left', 'right', 'forward', 'backward'
+        msg: 运动控制命令对象
+        Ctrl: 控制器对象，负责发送命令和等待执行完成
+        duration (int): 运动持续时间（毫秒）
+        speed (float): 运动速度
+        step_height (float): 步高，默认为0.03
+    """
     if direction == 'left':  
-        msg.vel_des = [0, speed, 0]  
+        msg.vel_des = [0, speed, 0]  # 左移，y轴正方向
     elif direction == 'right':  
         speed = 0 - speed  
-        msg.vel_des = [0, speed, 0]  
+        msg.vel_des = [0, speed, 0]  # 右移，y轴负方向
     elif direction == 'forward':  
-        msg.vel_des = [speed, 0, 0]  
+        msg.vel_des = [speed, 0, 0]  # 前进，x轴正方向
     elif direction == 'backward':  
         speed = 0 - speed  
-        msg.vel_des = [speed, 0, 0]  
-    msg.mode = 11  
-    msg.gait_id = 26  
-    msg.duration = duration  
-    msg.life_count += 1  
-    msg.step_height = [step_height, step_height]  
-    Ctrl.Send_cmd(msg)  
-    Ctrl.Wait_finish(11, 26)  
+        msg.vel_des = [speed, 0, 0]  # 后退，x轴负方向
+    msg.mode = 11  # 设置运动模式为11（步态运动）
+    msg.gait_id = 26  # 步态ID为26
+    msg.duration = duration  # 设置运动持续时间
+    msg.life_count += 1  # 更新life_count以确保命令生效
+    msg.step_height = [step_height, step_height]  # 设置步高
+    Ctrl.Send_cmd(msg)  # 发送控制命令
+    Ctrl.Wait_finish(11, 26)  # 等待运动完成
 
 def move(direction, msg, Ctrl, duration, speed):  
+    """
+    控制机器人按指定方向移动。
+
+    参数:
+        direction (str): 运动方向，可选 'left', 'right', 'forward', 'backward'
+        msg: 运动控制命令对象
+        Ctrl: 控制器对象，负责发送命令和等待执行完成
+        duration (int): 运动持续时间（毫秒）
+        speed (float): 运动速度
+    """
+    # 根据方向设置速度向量
     if direction == 'left':  
-        msg.vel_des = [0, speed, 0]  
+        msg.vel_des = [0, speed, 0]  # 左移，y轴正方向
     elif direction == 'right':  
         speed = 0 - speed  
-        msg.vel_des = [0, speed, 0]  
+        msg.vel_des = [0, speed, 0]  # 右移，y轴负方向
     elif direction == 'forward':  
-        msg.vel_des = [speed, 0, 0]  
+        msg.vel_des = [speed, 0, 0]  # 前进，x轴正方向
     elif direction == 'backward':  
         speed = 0 - speed  
-        msg.del_des = [speed, 0, 0]  
-    msg.mode = 11  
-    msg.gait_id = 27  
-    msg.duration = duration  
-    msg.life_count += 1  
-    # msg.step_height = [step_height, step_height]  
-    Ctrl.Send_cmd(msg)  
-    Ctrl.Wait_finish(11, 27)  
+        msg.del_des = [speed, 0, 0]  # 后退，x轴负方向（注意：此处应为vel_des，疑似笔误）
+    msg.mode = 11  # 设置运动模式为11（步态运动）
+    msg.gait_id = 27  # 步态ID为27
+    msg.duration = duration  # 设置运动持续时间
+    msg.life_count += 1  # 更新life_count以确保命令生效
+    # msg.step_height = [step_height, step_height]  # 可选：设置步高
+    Ctrl.Send_cmd(msg)  # 发送控制命令
+    Ctrl.Wait_finish(11, 27)  # 等待运动完成
 
 def stand(msg, Ctrl):  
-    msg.mode = 12  
-    msg.gait_id = 0  
-    msg.duration = 1000  
-    msg.life_count += 1  
-    Ctrl.Send_cmd(msg)  
-    Ctrl.Wait_finish(12, 0)  
+    """
+    让机器人站立（恢复站立姿态）。
+
+    参数:
+        msg: 机器人控制命令对象
+        Ctrl: 控制器对象，负责发送命令和等待执行完成
+    """
+    msg.mode = 12  # 设置模式为12，表示恢复站立
+    msg.gait_id = 0  # 步态ID为0，通常为默认站立步态
+    msg.duration = 1000  # 持续时间设为1000ms
+    msg.life_count += 1  # 更新life_count以确保命令生效
+    Ctrl.Send_cmd(msg)  # 发送控制命令
+    Ctrl.Wait_finish(12, 0)  # 等待站立动作完成
 
 def main(args=None):  
     rclpy.init(args=args)  
@@ -501,6 +539,7 @@ def main(args=None):
 class SensorSubscriber(Node):
     def __init__(self):
         super().__init__('sensor_listener')
+        # 创建激光雷达数据订阅，订阅/scan话题
         qos_profile = QoSProfile(depth=10)
         qos_profile.reliability = ReliabilityPolicy.BEST_EFFORT  # 设置为RELIABILITY_BEST_EFFORT
         self.subscription = self.create_subscription(
@@ -508,16 +547,20 @@ class SensorSubscriber(Node):
             '/mi_desktop_48_b0_2d_7b_06_b6/scan',
             self.listener_callback,
             qos_profile)
-        self.left_dist = None
-        self.right_dist = None
-        self.left_list = []
-        self.right_list = []
-        self.list = []
+        # 初始化激光雷达相关属性
+        self.left_dist = None  # 左侧距离
+        self.right_dist = None  # 右侧距离
+        self.left_list = []    # 左侧距离列表
+        self.right_list = []   # 右侧距离列表
+        self.list = []         # 全部距离数据列表
 
-        self.green_cx = 0
-        self.red_cx = 0
-        self.green_count = 0
-        self.red_count = 0
+        # 初始化图像识别相关属性
+        self.green_cx = 0      # 绿色物体质心x坐标
+        self.red_cx = 0        # 红色物体质心x坐标
+        self.green_count = 0   # 绿色像素点数量
+        self.red_count = 0     # 红色像素点数量
+
+        # 创建图像数据订阅，订阅/image_rgb话题
         qos_profile = QoSProfile(depth=10)
         qos_profile.reliability = ReliabilityPolicy.BEST_EFFORT
         self.subscription = self.create_subscription(
@@ -527,7 +570,7 @@ class SensorSubscriber(Node):
             qos_profile,
         )
         self.subscription  # 防止未使用变量警告
-        self.bridge = CvBridge()
+        self.bridge = CvBridge()  # OpenCV与ROS图像消息转换桥
 
     def listener_callback(self, msg):        
         # 有时收集到的某些雷达点数据小于0.1（0.2）属于无效数据，用样条插值法补全
